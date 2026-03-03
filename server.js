@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://rajgururaj1765_db_user:r1a7j0g6u0r5u@cluster0.saptg0n.mongodb.net/robo?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://rajgururaj1765_db_user:Raj12345@cluster0.saptg0n.mongodb.net/robo?retryWrites=true&w=majority")
 .then(() => console.log("MongoDB Atlas Connected"))
 .catch(err => console.log(err));
 
