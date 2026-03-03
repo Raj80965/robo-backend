@@ -6,17 +6,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔥 MongoDB Connection (Render Environment Variable use karega)
-mongoose.connect(process.env.MONGO_URI)
+// 🔥 MongoDB Connection
+mongoose.connect(process.env.mongodb+srv://USERNAME:Raj12345@cluster0.saptg0n.mongodb.net/robo?retryWrites=true&w=majority)
 .then(() => console.log("MongoDB Connected"))
-.catch(err => console.log("Mongo Error:", err));
+.catch(err => console.log("MongoDB Error:", err));
 
-// ✅ Root route (Cannot GET / fix)
+// ✅ Root Route
 app.get("/", (req, res) => {
   res.send("API Working 🚀");
 });
 
-// Event Schema
+// 🔥 Event Schema
 const EventSchema = new mongoose.Schema({
   title: String,
   date: String,
@@ -27,26 +27,41 @@ const EventSchema = new mongoose.Schema({
 
 const Event = mongoose.model("Event", EventSchema);
 
-// Add Event
+// ✅ Add Event
 app.post("/add-event", async (req, res) => {
-  const event = new Event(req.body);
-  await event.save();
-  res.json({ message: "Event Saved" });
+  try {
+    const event = new Event(req.body);
+    await event.save();
+    res.json({ message: "Event Saved" });
+  } catch (error) {
+    console.log("Add Error:", error);
+    res.status(500).json({ error: "Failed to save event" });
+  }
 });
 
-// Get All Events
+// ✅ Get All Events
 app.get("/events", async (req, res) => {
-  const events = await Event.find();
-  res.json(events);
+  try {
+    const events = await Event.find();
+    res.json(events);
+  } catch (error) {
+    console.log("Fetch Error:", error);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
-// Delete Event
+// ✅ Delete Event
 app.delete("/delete-event/:id", async (req, res) => {
-  await Event.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+  try {
+    await Event.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted" });
+  } catch (error) {
+    console.log("Delete Error:", error);
+    res.status(500).json({ error: "Delete failed" });
+  }
 });
 
-// 🔥 IMPORTANT for Render
+// 🔥 Render Port Fix
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
