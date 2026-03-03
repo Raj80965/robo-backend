@@ -6,13 +6,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://rajgururaj1765_db_user:Raj12345@cluster0.saptg0n.mongodb.net/robo?retryWrites=true&w=majority")
-.then(() => console.log("MongoDB Atlas Connected"))
-.catch(err => console.log(err));
+// 🔥 MongoDB Connection (Render Environment Variable use karega)
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log("Mongo Error:", err));
+
+// ✅ Root route (Cannot GET / fix)
 app.get("/", (req, res) => {
   res.send("API Working 🚀");
 });
 
+// Event Schema
 const EventSchema = new mongoose.Schema({
   title: String,
   date: String,
@@ -23,22 +27,28 @@ const EventSchema = new mongoose.Schema({
 
 const Event = mongoose.model("Event", EventSchema);
 
+// Add Event
 app.post("/add-event", async (req, res) => {
   const event = new Event(req.body);
   await event.save();
   res.json({ message: "Event Saved" });
 });
 
+// Get All Events
 app.get("/events", async (req, res) => {
   const events = await Event.find();
   res.json(events);
 });
 
+// Delete Event
 app.delete("/delete-event/:id", async (req, res) => {
   await Event.findByIdAndDelete(req.params.id);
   res.json({ message: "Deleted" });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+// 🔥 IMPORTANT for Render
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
