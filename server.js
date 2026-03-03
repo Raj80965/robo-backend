@@ -9,6 +9,9 @@ app.use(express.json());
 mongoose.connect("mongodb+srv://rajgururaj1765_db_user:Raj12345@cluster0.saptg0n.mongodb.net/robo?retryWrites=true&w=majority")
 .then(() => console.log("MongoDB Atlas Connected"))
 .catch(err => console.log(err));
+app.get("/", (req, res) => {
+  res.send("API Working 🚀");
+});
 
 const EventSchema = new mongoose.Schema({
   title: String,
